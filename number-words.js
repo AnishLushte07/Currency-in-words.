@@ -4,7 +4,7 @@
     } else if (typeof exports === 'object') {
         module.exports = factory();
     } else {
-        root.anish = factory();
+        root.NumberToWordSting = factory();
     }
 })(this, toWordsModule);
 
@@ -75,17 +75,19 @@ function toWordsModule() {
             throw 'Please enter only integer value';
         }
 
-        if (a.toString().length > 7) {
-            throw 'Enter number with 7 or less than 7 digit';
+        if (a.toString().length > 9) {
+            throw 'Enter number with 9 or less than 9 digit';
         }
 
         var input = a.toString().split("");
         var inputLength = input.length;
 
 
-        var hundred = [];
-        var thousand = [];
-        var lac = [];
+        var hundred = [],
+            thousand = [],
+            lac = [],
+            crore = [];
+
 
         if (inputLength < 3) {
             for (var i = 0; i < 3 - inputLength; i++) {
@@ -94,6 +96,8 @@ function toWordsModule() {
         } else if (inputLength > 3 && inputLength < 5) {
             input.unshift("0");
         } else if (inputLength > 5 && inputLength < 7) {
+            input.unshift("0");
+        } else if (inputLength > 7 && inputLength < 9) {
             input.unshift("0");
         }
 
@@ -106,17 +110,30 @@ function toWordsModule() {
             hundred = input.slice(4, 7);
             thousand = input.slice(2, 4);
             lac = input.slice(0, 2);
+        } else if (input.length === 9) {
+            hundred = input.slice(6, 9);
+            thousand = input.slice(4, 6);
+            lac = input.slice(2, 4);
+            crore = input.slice(0, 2);
         }
 
-        var hundredString = [];
-        var thousandString = [];
-        var lacString = [];
+        var hundredString = [],
+            thousandString = [],
+            lacString = [],
+            croreString = [];
+
         var first, second, third;
+
+        if (crore.length) {
+            first = crore[0];
+            second = crore[1];
+            croreString = setLacAndThousand(first, second, 'crore');
+        }
 
         if (lac.length) {
             first = lac[0];
             second = lac[1];
-            lacString = setLacAndThousand(first, second, 'lacs');
+            lacString = setLacAndThousand(first, second, 'lac');
         }
 
 
@@ -142,12 +159,12 @@ function toWordsModule() {
             }
         }
 
-        return lacString.concat(thousandString).concat(hundredString).join(" ");
+        return croreString.concat(lacString).concat(thousandString).concat(hundredString).join(" ");
     }
 
 
     return {
-        ConvertToWords: convertToWords
+        convert: convertToWords
     };
 
 }
