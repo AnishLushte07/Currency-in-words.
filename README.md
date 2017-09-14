@@ -1,2 +1,2 @@
-# Currency-in-words.
-Convert currency from numbers to words.
+# Numbers to words.
+Convert give number to words.
